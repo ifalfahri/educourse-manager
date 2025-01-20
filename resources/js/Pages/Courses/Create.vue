@@ -5,6 +5,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import CurrencyInput from '@/Components/CurrencyInput.vue';
 import { Head } from '@inertiajs/vue3';
 
 const form = useForm({
@@ -65,13 +66,10 @@ const submit = () => {
                             <!-- Price -->
                             <div>
                                 <InputLabel for="price" value="Price" />
-                                <TextInput
+                                <CurrencyInput
                                     id="price"
                                     v-model="form.price"
-                                    type="number"
                                     class="mt-1 block w-full"
-                                    min="0"
-                                    step="0.01"
                                     required
                                 />
                                 <InputError :message="form.errors.price" class="mt-2" />
