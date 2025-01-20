@@ -55,17 +55,29 @@ class CourseController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Course $course)
     {
-        //
+        return Inertia::render('Courses/Edit', [
+            'course' => $course
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Course $course)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'status' => 'boolean'
+        ]);
+    
+        $course->update($validated);
+    
+        return redirect()->route('courses.index')
+            ->with('message', 'Course updated successfully');
     }
 
     /**
