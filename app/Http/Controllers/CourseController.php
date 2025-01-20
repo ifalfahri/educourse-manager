@@ -73,9 +73,9 @@ class CourseController extends Controller
             'price' => 'required|numeric|min:0',
             'status' => 'boolean'
         ]);
-    
+
         $course->update($validated);
-    
+
         return redirect()->route('courses.index')
             ->with('message', 'Course updated successfully');
     }
@@ -83,8 +83,11 @@ class CourseController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Course $course)
     {
-        //
+        $course->delete();
+
+        return redirect()->route('courses.index')
+            ->with('message', 'Course deleted successfully');
     }
 }

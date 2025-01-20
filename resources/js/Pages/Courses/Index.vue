@@ -1,4 +1,6 @@
 <script setup>
+import { useForm } from '@inertiajs/vue3';
+import DangerButton from '@/Components/DangerButton.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
 
@@ -8,6 +10,14 @@ defineProps({
         required: true
     }
 });
+
+const form = useForm({});
+
+const deleteCourse = (id) => {
+    if (confirm('Are you sure you want to delete this course?')) {
+        form.delete(route('courses.destroy', id));
+    }
+};
 </script>
 
 <template>
@@ -63,22 +73,25 @@ defineProps({
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <span :class="[
                                             'px-2 inline-flex text-xs leading-5 font-semibold rounded-full',
-                                            course.is_active 
+                                            course.status
                                                 ? 'bg-green-100 text-green-800'
                                                 : 'bg-red-100 text-red-800'
                                         ]">
-                                            {{ course.is_active ? 'Active' : 'Inactive' }}
+                                            {{ course.status? 'Active' : 'Inactive' }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ course.enrolled_students }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-6 py-4 whitespace-nowrap space-x-2">
                                         <Link
                                             :href="route('courses.edit', course.id)"
-                                            class="text-indigo-600 hover:text-indigo-900 mr-3"
+                                            class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-gray-700 shadow-sm transition duration-150 ease-in-out hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 dark:border-gray-500 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:focus:ring-offset-gray-800"
                                         >
                                             Edit
                                         </Link>
-                                        <!-- Add delete button here -->
+                                        <DangerButton 
+                                        @click="deleteCourse(course.id)">
+                                            Delete
+                                        </DangerButton>
                                     </td>
                                 </tr>
                             </tbody>
