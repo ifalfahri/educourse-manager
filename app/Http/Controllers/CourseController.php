@@ -23,7 +23,7 @@ class CourseController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Courses/Create');
     }
 
     /**
@@ -31,7 +31,17 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'status' => 'boolean'
+        ]);
+
+        Course::create($validated);
+
+        return redirect()->route('courses.index')
+            ->with('message', 'Course created successfully');
     }
 
     /**
