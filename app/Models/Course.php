@@ -6,5 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Course extends Model
 {
-    //
+    protected $fillable = [
+        'name',
+        'description',
+        'price',
+        'status',
+        'students_count'
+    ];
+
+    protected $casts = [
+        'price' => 'integer',
+        'status' => 'boolean',
+        'students_count' => 'integer'
+    ];
 }
