@@ -13,10 +13,4 @@ class Course extends Model
         'status',
         'students_count'
     ];
-
-    protected $casts = [
-        'price' => 'integer',
-        'status' => 'boolean',
-        'students_count' => 'integer'
-    ];
 }

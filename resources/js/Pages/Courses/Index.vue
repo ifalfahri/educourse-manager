@@ -1,10 +1,12 @@
 <script setup>
+import { useForm } from '@inertiajs/vue3';
 import { ref } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import DangerButton from "@/Components/DangerButton.vue";
 import Modal from "@/Components/Modal.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
+import axios from 'axios';
 
 const props = defineProps({
     courses: {
@@ -31,6 +33,53 @@ const deleteCourse = (id) => {
         router.delete(route("courses.destroy", id));
     }
 };
+
+const fileInput = ref(null);
+const form = useForm({
+    file: null
+});
+
+const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        form.clearErrors();
+        form.file = file;
+        submitImport();
+    }
+};
+
+const submitImport = () => {
+    if (!form.file) return;
+
+    form.post(route('courses.import'), {
+        preserveScroll: true,
+        preserveFiles: true,
+        onSuccess: () => {
+            fileInput.value.value = ''; // Clear the input
+            form.reset(); // Reset the form
+        },
+        onError: (errors) => {
+            console.error('Import errors:', errors);
+        }
+    });
+};
+
+const downloadExcel = async () => {
+    try {
+        const response = await axios.get(route('courses.export'));
+        const link = document.createElement('a');
+        link.href = response.data.file;
+        link.setAttribute('download', 'courses.xlsx');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } catch (error) {
+        console.error('Download failed:', error);
+    }
+};
 </script>
 
 <template>
@@ -38,11 +87,42 @@ const deleteCourse = (id) => {
 
     <AuthenticatedLayout>
         <template #header>
+            <div class="flex justify-between items-center">
             <h2
                 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200"
             >
                 Courses
             </h2>
+            <div class="flex gap-2">
+        <!-- Import Button -->
+        <form @submit.prevent="submitImport" enctype="multipart/form-data" class="inline">
+            <input
+                type="file"
+                ref="fileInput"
+                class="hidden"
+                @change="handleFileChange"
+                accept=".xlsx,.xls"
+            >
+            <SecondaryButton
+                type="button"
+                @click="$refs.fileInput.click()"
+            >
+                Import Excel
+            </SecondaryButton>
+            <div v-if="form.errors.file" class="text-red-500 text-sm mt-1">
+    {{ form.errors.file }}
+</div>
+        </form>
+
+        <!-- Export Button -->
+        <button
+            @click="downloadExcel"
+            class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150"
+        >
+            Export Excel
+        </button>
+    </div>
+</div>
         </template>
 
         <div class="py-12">

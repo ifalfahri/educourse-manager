@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\CoursesImport;
+use App\Exports\CoursesExport;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Course;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CourseController extends Controller
 {
@@ -89,5 +92,27 @@ class CourseController extends Controller
 
         return redirect()->route('courses.index')
             ->with('message', 'Course deleted successfully');
+    }
+
+    public function export()
+    {
+        $fileName = 'courses_'.time().'.xlsx';
+        Excel::store(new CoursesExport, $fileName, 'public');
+        
+        return response()->json([
+            'file' => asset('storage/'.$fileName)
+        ]);
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new CoursesImport, $request->file('file'));
+
+        return redirect()->route('courses.index')
+            ->with('message', 'Courses imported successfully');
     }
 }

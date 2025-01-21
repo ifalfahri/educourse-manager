@@ -26,7 +26,10 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('courses/export', [CourseController::class, 'export'])->name('courses.export');
+    Route::post('courses/import', [CourseController::class, 'import'])->name('courses.import');
     Route::resource('courses', CourseController::class);
+
 });
 
 require __DIR__.'/auth.php';
