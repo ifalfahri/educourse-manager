@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\EnrollmentController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -30,6 +31,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('courses/import', [CourseController::class, 'import'])->name('courses.import');
     Route::get('courses/print', [CourseController::class, 'printPdf'])->name('courses.print');
     Route::resource('courses', CourseController::class);
+    Route::resource('enrollments', EnrollmentController::class);
 });
 
 require __DIR__.'/auth.php';
