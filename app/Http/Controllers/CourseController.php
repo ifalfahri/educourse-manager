@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Imports\CoursesImport;
-use App\Exports\CoursesExport;
+use App\Models\Course;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Course;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\CoursesImport;
+use App\Exports\CoursesExport;
 
 class CourseController extends Controller
 {
