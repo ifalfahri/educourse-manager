@@ -6,8 +6,9 @@ use App\Models\Course;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\CoursesImport;
 use App\Exports\CoursesExport;
+use App\Imports\CoursesImport;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CourseController extends Controller
 {
@@ -114,5 +115,16 @@ class CourseController extends Controller
 
         return redirect()->route('courses.index')
             ->with('message', 'Courses imported successfully');
+    }
+
+    public function printPdf()
+    {
+        $courses = Course::all();
+    
+    $pdf = PDF::loadView('pdf.courses', [
+        'courses' => $courses
+    ]);
+    
+    return $pdf->download('courses.pdf');
     }
 }

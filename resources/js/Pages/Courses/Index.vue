@@ -1,12 +1,12 @@
 <script setup>
-import { useForm } from '@inertiajs/vue3';
+import { useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import DangerButton from "@/Components/DangerButton.vue";
 import Modal from "@/Components/Modal.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
-import axios from 'axios';
+import axios from "axios";
 
 const props = defineProps({
     courses: {
@@ -36,15 +36,15 @@ const deleteCourse = (id) => {
 
 const fileInput = ref(null);
 const form = useForm({
-    file: null
+    file: null,
 });
 
 const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
         const formData = new FormData();
-        formData.append('file', file);
-        
+        formData.append("file", file);
+
         form.clearErrors();
         form.file = file;
         submitImport();
@@ -54,30 +54,50 @@ const handleFileChange = (e) => {
 const submitImport = () => {
     if (!form.file) return;
 
-    form.post(route('courses.import'), {
+    form.post(route("courses.import"), {
         preserveScroll: true,
         preserveFiles: true,
         onSuccess: () => {
-            fileInput.value.value = ''; // Clear the input
+            fileInput.value.value = ""; // Clear the input
             form.reset(); // Reset the form
         },
         onError: (errors) => {
-            console.error('Import errors:', errors);
-        }
+            console.error("Import errors:", errors);
+        },
     });
 };
 
 const downloadExcel = async () => {
     try {
-        const response = await axios.get(route('courses.export'));
-        const link = document.createElement('a');
+        const response = await axios.get(route("courses.export"));
+        const link = document.createElement("a");
         link.href = response.data.file;
-        link.setAttribute('download', 'courses.xlsx');
+        link.setAttribute("download", "courses.xlsx");
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
     } catch (error) {
-        console.error('Download failed:', error);
+        console.error("Download failed:", error);
+    }
+};
+
+const printPdf = async () => {
+    try {
+        const response = await axios.get(route("courses.print"), {
+            responseType: "blob", // Important for handling PDF files
+        });
+
+        const blob = new Blob([response.data], { type: "application/pdf" });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "courses.pdf");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+    } catch (error) {
+        console.error("PDF generation failed:", error);
     }
 };
 </script>
@@ -88,41 +108,55 @@ const downloadExcel = async () => {
     <AuthenticatedLayout>
         <template #header>
             <div class="flex justify-between items-center">
-            <h2
-                class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200"
-            >
-                Courses
-            </h2>
-            <div class="flex gap-2">
-        <!-- Import Button -->
-        <form @submit.prevent="submitImport" enctype="multipart/form-data" class="inline">
-            <input
-                type="file"
-                ref="fileInput"
-                class="hidden"
-                @change="handleFileChange"
-                accept=".xlsx,.xls"
-            >
-            <SecondaryButton
-                type="button"
-                @click="$refs.fileInput.click()"
-            >
-                Import Excel
-            </SecondaryButton>
-            <div v-if="form.errors.file" class="text-red-500 text-sm mt-1">
-    {{ form.errors.file }}
-</div>
-        </form>
+                <h2
+                    class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200"
+                >
+                    Courses
+                </h2>
+                <div class="flex gap-2">
+                    <!-- Import Button -->
 
-        <!-- Export Button -->
-        <button
-            @click="downloadExcel"
-            class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150"
-        >
-            Export Excel
-        </button>
-    </div>
-</div>
+                    <form
+                        @submit.prevent="submitImport"
+                        enctype="multipart/form-data"
+                        class="inline"
+                    >
+                        <input
+                            type="file"
+                            ref="fileInput"
+                            class="hidden"
+                            @change="handleFileChange"
+                            accept=".xlsx,.xls"
+                        />
+                        <SecondaryButton
+                            type="button"
+                            @click="$refs.fileInput.click()"
+                        >
+                            Import Excel
+                        </SecondaryButton>
+                        <div
+                            v-if="form.errors.file"
+                            class="text-red-500 text-sm mt-1"
+                        >
+                            {{ form.errors.file }}
+                        </div>
+                    </form>
+
+                    <!-- Export Button -->
+                    <button
+                        @click="downloadExcel"
+                        class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150"
+                    >
+                        Export Excel
+                    </button>
+                    <button
+                        @click="printPdf"
+                        class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150"
+                    >
+                        Print PDF
+                    </button>
+                </div>
+            </div>
         </template>
 
         <div class="py-12">
@@ -146,117 +180,121 @@ const downloadExcel = async () => {
                                 <div
                                     class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg"
                                 >
-                                <table
-                                    class="min-w-full divide-y divide-gray-200"
-                                >
-                                    <thead>
-                                        <tr>
-                                            <th
-                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                            >
-                                                Name
-                                            </th>
-                                            <th
-                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                            >
-                                                Price
-                                            </th>
-                                            <th
-                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                            >
-                                                Status
-                                            </th>
-                                            <th
-                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                            >
-                                                Enrolled Students
-                                            </th>
-                                            <th
-                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                            >
-                                                Actions
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody
-                                        class="bg-white divide-y divide-gray-200 dark:bg-gray-800"
+                                    <table
+                                        class="min-w-full divide-y divide-gray-200"
                                     >
-                                        <tr
-                                            v-for="course in courses"
-                                            :key="course.id"
-                                            @click="showCourse(course)"
-                                            class="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
+                                        <thead>
+                                            <tr>
+                                                <th
+                                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                                >
+                                                    Name
+                                                </th>
+                                                <th
+                                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                                >
+                                                    Price
+                                                </th>
+                                                <th
+                                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                                >
+                                                    Status
+                                                </th>
+                                                <th
+                                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                                >
+                                                    Enrolled Students
+                                                </th>
+                                                <th
+                                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                                >
+                                                    Actions
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody
+                                            class="bg-white divide-y divide-gray-200 dark:bg-gray-800"
                                         >
-                                            <td
-                                                class="px-6 py-4 whitespace-nowrap"
+                                            <tr
+                                                v-for="course in courses"
+                                                :key="course.id"
+                                                @click="showCourse(course)"
+                                                class="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
                                             >
-                                                {{ course.name }}
-                                            </td>
-                                            <td
-                                                class="px-6 py-4 whitespace-nowrap"
-                                            >
-                                                {{
-                                                    new Intl.NumberFormat(
-                                                        "id-ID",
-                                                        {
-                                                            style: "currency",
-                                                            currency: "IDR",
-                                                            maximumFractionDigits: 0,
-                                                        }
-                                                    ).format(course.price)
-                                                }}
-                                            </td>
-                                            <td
-                                                class="px-6 py-4 whitespace-nowrap"
-                                            >
-                                                <span
-                                                    :class="[
-                                                        'px-2 inline-flex text-xs leading-5 font-semibold rounded-full',
-                                                        course.status
-                                                            ? 'bg-green-100 text-green-800'
-                                                            : 'bg-red-100 text-red-800',
-                                                    ]"
+                                                <td
+                                                    class="px-6 py-4 whitespace-nowrap"
+                                                >
+                                                    {{ course.name }}
+                                                </td>
+                                                <td
+                                                    class="px-6 py-4 whitespace-nowrap"
                                                 >
                                                     {{
-                                                        course.status
-                                                            ? "Active"
-                                                            : "Inactive"
+                                                        new Intl.NumberFormat(
+                                                            "id-ID",
+                                                            {
+                                                                style: "currency",
+                                                                currency: "IDR",
+                                                                maximumFractionDigits: 0,
+                                                            }
+                                                        ).format(course.price)
                                                     }}
-                                                </span>
-                                            </td>
-                                            <td
-                                                class="px-6 py-4 whitespace-nowrap"
-                                            >
-                                                {{ course.enrolled_students }}
-                                            </td>
-                                            <td
-                                                class="px-6 py-4 whitespace-nowrap space-x-2"
-                                            >
-                                                <Link
-                                                    :href="
-                                                        route(
-                                                            'courses.edit',
-                                                            course.id
-                                                        )
-                                                    "
-                                                    class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-gray-700 shadow-sm transition duration-150 ease-in-out hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 dark:border-gray-500 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:focus:ring-offset-gray-800"
-                                                    @click.stop
+                                                </td>
+                                                <td
+                                                    class="px-6 py-4 whitespace-nowrap"
                                                 >
-                                                    Edit
-                                                </Link>
-                                                <DangerButton
-                                                    @click.stop="
-                                                        deleteCourse(course.id)
-                                                    "
+                                                    <span
+                                                        :class="[
+                                                            'px-2 inline-flex text-xs leading-5 font-semibold rounded-full',
+                                                            course.status
+                                                                ? 'bg-green-100 text-green-800'
+                                                                : 'bg-red-100 text-red-800',
+                                                        ]"
+                                                    >
+                                                        {{
+                                                            course.status
+                                                                ? "Active"
+                                                                : "Inactive"
+                                                        }}
+                                                    </span>
+                                                </td>
+                                                <td
+                                                    class="px-6 py-4 whitespace-nowrap"
                                                 >
-                                                    Delete
-                                                </DangerButton>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                                    {{
+                                                        course.enrolled_students
+                                                    }}
+                                                </td>
+                                                <td
+                                                    class="px-6 py-4 whitespace-nowrap space-x-2"
+                                                >
+                                                    <Link
+                                                        :href="
+                                                            route(
+                                                                'courses.edit',
+                                                                course.id
+                                                            )
+                                                        "
+                                                        class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-gray-700 shadow-sm transition duration-150 ease-in-out hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 dark:border-gray-500 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:focus:ring-offset-gray-800"
+                                                        @click.stop
+                                                    >
+                                                        Edit
+                                                    </Link>
+                                                    <DangerButton
+                                                        @click.stop="
+                                                            deleteCourse(
+                                                                course.id
+                                                            )
+                                                        "
+                                                    >
+                                                        Delete
+                                                    </DangerButton>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                        </div>
                         </div>
 
                         <!-- Course Details Modal -->
