@@ -26,7 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('courses/export', [CourseController::class, 'export'])->name('courses.export');
     Route::post('courses/import', [CourseController::class, 'import'])->name('courses.import');
     Route::get('courses/print', [CourseController::class, 'printPdf'])->name('courses.print');
