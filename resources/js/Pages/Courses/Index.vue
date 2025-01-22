@@ -271,7 +271,7 @@ const printPdf = async () => {
                                                     class="px-6 py-4 whitespace-nowrap"
                                                 >
                                                     {{
-                                                        course.enrolled_students
+                                                        course.students_count
                                                     }}
                                                 </td>
                                                 <td
