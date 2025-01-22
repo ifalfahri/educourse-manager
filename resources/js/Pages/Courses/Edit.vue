@@ -41,9 +41,9 @@ const submit = () => {
             </h2>
         </template>
 
-        <div class="py-12">
+        <div class="p-4 md:py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="bg-white p-6 shadow-sm sm:rounded-lg dark:bg-gray-800">
+                <div class="bg-white p-6 shadow rounded-lg dark:bg-gray-800">
                     <form @submit.prevent="submit">
                         <div class="grid gap-6">
                             <!-- Course Name -->

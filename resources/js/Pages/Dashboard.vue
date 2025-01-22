@@ -31,10 +31,10 @@ const props = defineProps({
             </h2>
         </template>
 
-        <div class="py-8 md:py-12">
+        <div class="p-4 md:py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <!-- Stats Grid -->
-                <div class="mb-8 grid gap-2 lg:gap-6 grid-cols-2 lg:grid-cols-4">
+                <div class="mb-4 md:mb-8 grid gap-2 lg:gap-6 grid-cols-2 lg:grid-cols-4">
                      <!-- Admin Stats -->
                     <template v-if="props.isAdmin">
                         <!-- Total Courses -->
@@ -197,7 +197,9 @@ const props = defineProps({
                 <!-- Recent Enrollments -->
                 <div class="overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
                     <div class="px-4 py-5 sm:p-6">
-                        <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">Recent Enrollments</h3>
+                        <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">
+                            {{ props.isAdmin ? 'Recent Enrollments' : 'My Enrollments' }}
+                        </h3>
                         <div class="mt-4">
                             <div class="overflow-x-auto">
                                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
