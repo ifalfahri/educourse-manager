@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EnrollmentController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -67,6 +68,8 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('courses/export', [CourseController::class, 'export'])->name('courses.export');
     Route::post('courses/import', [CourseController::class, 'import'])->name('courses.import');
     Route::get('courses/print', [CourseController::class, 'printPdf'])->name('courses.print');
+    Route::get('/students', [UserController::class, 'students'])->name('students.index');
+    Route::get('/students/{user}', [UserController::class, 'show'])->name('students.show');
     Route::resource('courses', CourseController::class);
     Route::resource('enrollments', EnrollmentController::class);
 });
