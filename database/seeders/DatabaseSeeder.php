@@ -14,12 +14,17 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            AdminUserSeeder::class
+            AdminUserSeeder::class,
+            CourseSeeder::class,
         ]);
 
         // Create some student users
         User::factory(10)->create([
             'role' => 'student'
+        ]);
+
+        $this->call([
+            EnrollmentSeeder::class
         ]);
     }
 }
