@@ -17,7 +17,44 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    $user = auth()->user();
+    
+    if ($user->role === 'admin') {
+        $stats = [
+            'totalCourses' => \App\Models\Course::count(),
+            'activeCourses' => \App\Models\Course::where('status', true)->count(),
+            'totalStudents' => \App\Models\User::where('role', 'student')->count(),
+            'totalEnrollments' => \App\Models\Enrollment::count(),
+        ];
+
+        $recentEnrollments = \App\Models\Enrollment::with(['user', 'course'])
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+    } else {
+        $stats = [
+            'totalCourses' => \App\Models\Course::where('status', true)->count(),
+            'myCourses' => \App\Models\Enrollment::where('user_id', $user->id)->count(),
+            'paidCourses' => \App\Models\Enrollment::where('user_id', $user->id)
+                ->where('payment_status', 'paid')
+                ->count(),
+            'unpaidCourses' => \App\Models\Enrollment::where('user_id', $user->id)
+                ->where('payment_status', 'unpaid')
+                ->count(),
+        ];
+
+        $recentEnrollments = \App\Models\Enrollment::with(['course'])
+            ->where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+    }
+
+    return Inertia::render('Dashboard', [
+        'stats' => $stats,
+        'recentEnrollments' => $recentEnrollments,
+        'isAdmin' => $user->role === 'admin'
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
