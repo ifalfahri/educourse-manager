@@ -39,18 +39,17 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Dashboard
                                 </NavLink>
+                                <template v-if="$page.props.auth.user.role === 'admin'">
                                 <NavLink
                                     :href="route('courses.index')"
                                     :active="route().current('courses.*')"
                                 >
                                     Courses
                                 </NavLink>
-                                <NavLink
-                                    :href="route('enrollments.index')"
-                                    :active="route().current('enrollments.*')"
-                                >
-                                    Enrollments
-                                </NavLink>
+                                    <NavLink :href="route('enrollments.index')" :active="route().current('enrollments.*')">
+                                        Enrollments
+                                    </NavLink>
+                                </template>
                             </div>
                         </div>
 
@@ -158,6 +157,7 @@ const showingNavigationDropdown = ref(false);
                         >
                             Dashboard
                         </ResponsiveNavLink>
+                        <template v-if="$page.props.auth.user.role === 'admin'">
                         <ResponsiveNavLink
                             :href="route('courses.index')"
                             :active="route().current('courses.*')"
@@ -170,6 +170,7 @@ const showingNavigationDropdown = ref(false);
                         >
                             Enrollments
                         </ResponsiveNavLink>
+                        </template>
                     </div>
 
                     <!-- Responsive Settings Options -->
