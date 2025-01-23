@@ -1,21 +1,25 @@
 # EduCourse Manager
+![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![Vue.js](https://img.shields.io/badge/vue.js-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
+![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white)
 
+> Manage your course easily
 ## Features
 
-- Course Management (CRUD operations)
-- Student Management
-- Enrollment System
-- Role-based Access Control (Admin/Student)
-- Excel Import/Export
-- PDF Report Generation
-- Search, Filter, and Sort functionality
+- 📚 Course Management (CRUD operations)
+- 👨‍🎓 Student Management
+- 📝 Enrollment System
+- 🔒 Role-based Access Control (Admin/Student)
+- 📊 Excel Import/Export
+- 📄 PDF Report Generation
+- 🔍 Search, Filter, and Sort functionality
 
 ## Prerequisites
 
-- PHP >= 8.2
-- Composer
-- Node.js & NPM
-- MySQL
+- 🐘 PHP >= 8.2
+- 🎼 Composer
+- 🟢 Node.js & NPM
+- 🗄️ MySQL
 
 ## Installation
 
@@ -71,12 +75,12 @@ After seeding, you can login with these default credentials:
   - or you can create it yourself through the register page
 
 ## Technology Stack
-- Laravel 11 for backend
-- Vue 3 for frontend
-- Inertia.js for SPA functionality
-- Tailwind CSS for styling
-- Laravel Excel for spreadsheet handling
-- DomPDF for PDF generation
+- 🖥️ Laravel 11 for backend
+- 🖼️ Vue 3 for frontend
+- ⚡ Inertia.js for SPA functionality
+- 🎨 Tailwind CSS for styling
+- 📊 Laravel Excel for spreadsheet handling
+- 📄 DomPDF for PDF generation
 
 ---
 Made with ❤️ by Ifal Fahri A
