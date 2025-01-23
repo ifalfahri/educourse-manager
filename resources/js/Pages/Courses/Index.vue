@@ -135,15 +135,28 @@ const submitImport = () => {
 
 const downloadExcel = async () => {
     try {
-        const response = await axios.get(route("courses.export"));
-        const link = document.createElement("a");
-        link.href = response.data.file;
-        link.setAttribute("download", "courses.xlsx");
+        const response = await axios.get(route('courses.export'), {
+            responseType: 'blob'
+        });
+        
+        const blob = new Blob([response.data], { 
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        });
+        
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        const fileName = `courses_${new Date().toISOString().slice(0,10)}.xlsx`;
+        
+        link.href = url;
+        link.setAttribute('download', fileName);
         document.body.appendChild(link);
         link.click();
+        
+        // Cleanup
         document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
     } catch (error) {
-        console.error("Download failed:", error);
+        console.error('Download failed:', error);
     }
 };
 

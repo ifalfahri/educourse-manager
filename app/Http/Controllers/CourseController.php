@@ -121,12 +121,11 @@ class CourseController extends Controller
 
     public function export()
     {
-        $fileName = 'courses_'.time().'.xlsx';
-        Excel::store(new CoursesExport, $fileName, 'public');
-        
-        return response()->json([
-            'file' => asset('storage/'.$fileName)
-        ]);
+        try {
+            return Excel::download(new CoursesExport, 'courses_' . date('Y-m-d_H-i-s') . '.xlsx');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to export courses');
+        }
     }
 
     public function import(Request $request)

@@ -6,9 +6,11 @@ use App\Models\Course;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\Exportable;
 
 class CoursesExport implements FromCollection, WithHeadings, ShouldAutoSize
 {
+    use Exportable;
     public function collection()
     {
         return Course::all()->map(function ($course) {
