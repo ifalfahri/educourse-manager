@@ -15,10 +15,34 @@ class CourseController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $query = Course::query();
+
+        // Search
+        if ($request->search) {
+            $query->where('name', 'like', '%' . $request->search . '%')
+                ->orWhere('description', 'like', '%' . $request->search . '%');
+        }
+
+        // Filter
+        if ($request->status !== null) {
+            $query->where('status', $request->status === 'true');
+        }
+
+        if ($request->price_range) {
+            $range = explode('-', $request->price_range);
+            $query->whereBetween('price', [$range[0], $range[1]]);
+        }
+
+        // Sort
+        $sortField = $request->sort_by ?? 'id';
+        $sortDirection = $request->sort_direction ?? 'asc';
+        $query->orderBy($sortField, $sortDirection);
+
         return Inertia::render('Courses/Index', [
-            'courses' => Course::all(),
+            'courses' => $query->paginate(5),
+            'filters' => $request->all(['search', 'status', 'price_range', 'sort_by', 'sort_direction'])
         ]);
     }
 
@@ -97,12 +121,11 @@ class CourseController extends Controller
 
     public function export()
     {
-        $fileName = 'courses_'.time().'.xlsx';
-        Excel::store(new CoursesExport, $fileName, 'public');
-        
-        return response()->json([
-            'file' => asset('storage/'.$fileName)
-        ]);
+        try {
+            return Excel::download(new CoursesExport, 'courses_' . date('Y-m-d_H-i-s') . '.xlsx');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to export courses');
+        }
     }
 
     public function import(Request $request)
@@ -125,6 +148,6 @@ class CourseController extends Controller
         'courses' => $courses
     ]);
     
-    return $pdf->download('courses.pdf');
+    return $pdf->stream('courses.pdf');
     }
 }
