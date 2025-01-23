@@ -148,6 +148,6 @@ class CourseController extends Controller
         'courses' => $courses
     ]);
     
-    return $pdf->download('courses.pdf');
+    return $pdf->stream('courses.pdf');
     }
 }

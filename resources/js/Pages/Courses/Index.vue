@@ -163,18 +163,19 @@ const downloadExcel = async () => {
 const printPdf = async () => {
     try {
         const response = await axios.get(route("courses.print"), {
-            responseType: "blob", // Important for handling PDF files
+            responseType: "blob"
         });
 
         const blob = new Blob([response.data], { type: "application/pdf" });
         const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", "courses.pdf");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
+        
+        // Open PDF in new tab instead of downloading
+        window.open(url, '_blank');
+        
+        // Cleanup
+        setTimeout(() => {
+            window.URL.revokeObjectURL(url);
+        }, 1000);
     } catch (error) {
         console.error("PDF generation failed:", error);
     }
