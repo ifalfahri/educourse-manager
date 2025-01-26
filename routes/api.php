@@ -1,8 +1,11 @@
 <?php
+use App\Http\Controllers\Api\CourseController;
+use App\Http\Controllers\Api\EnrollmentController;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+// Course endpoints
+Route::get('/courses', [CourseController::class, 'index']);
+Route::get('/courses/{course}', [CourseController::class, 'show']);
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// Enrollment endpoints  
+Route::get('/enrollments', [EnrollmentController::class, 'index']);
+Route::get('/enrollments/{enrollment}', [EnrollmentController::class, 'show']);
