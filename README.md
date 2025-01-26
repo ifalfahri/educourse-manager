@@ -83,4 +83,4 @@ After seeding, you can login with these default credentials:
 - 📄 DomPDF for PDF generation
 
 ---
-Made with ❤️ by Ifal Fahri A
+Made with ❤️ by [Ifal Fahri A](https://ifal.me)
