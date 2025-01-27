@@ -74,6 +74,38 @@ After seeding, you can login with these default credentials:
   - Password: password
   - or you can create it yourself through the register page
 
+## API Documentation
+
+### Courses
+```http
+GET /api/courses
+```
+Query parameters:
+- `search`: Search by name or description
+- `status`: Filter by status (true/false)
+- `price_range`: Filter by price range (format: min-max)
+- `sort_by`: Sort field (default: id)
+- `sort_direction`: Sort direction (asc/desc)
+
+```http
+GET /api/courses/{id}
+```
+Returns course details with enrolled students.
+
+### Enrollments
+```http
+GET /api/enrollments
+```
+Query parameters:
+- `payment_status`: Filter by payment status
+- `course_id`: Filter by course
+- `user_id`: Filter by user
+
+```http
+GET /api/enrollments/{id}
+```
+Returns enrollment details with user and course information.
+
 ## Technology Stack
 - 🖥️ Laravel 11 for backend
 - 🖼️ Vue 3 for frontend
