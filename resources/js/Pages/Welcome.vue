@@ -1,104 +1,12 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { 
-    AcademicCapIcon, 
-    UserGroupIcon, 
-    ChartBarIcon,
-    BookOpenIcon,
-    DocumentTextIcon,
-    AdjustmentsVerticalIcon 
-} from '@heroicons/vue/24/outline';
-
-const navigation = [
-    { name: 'Features', href: '#features' },
-    { name: 'About', href: '#about' },
-    { name: 'Testimonials', href: '#testimonials' },
-    { name: 'FAQ', href: '#faq' }
-];
-
-const socialLinks = [
-    {
-        name: 'GitHub',
-        href: 'https://github.com/ifalfahri/educourse-manager',
-    },
-    {
-        name: 'LinkedIn',
-        href: 'https://linkedin.com/in/ifalfahri',
-    },
-    {
-        name: 'Dribbble',
-        href: 'https://dribbble.com/ifalfahri',
-    }
-];
-
-const features = [
-    {
-        name: 'Course Management',
-        description: 'Create, update, and manage courses. Track course status and enrollment counts.',
-        icon: BookOpenIcon
-    },
-    {
-        name: 'Student Management',
-        description: 'Keep track of student information and their course enrollments efficiently.',
-        icon: UserGroupIcon
-    },
-    {
-        name: 'Advanced Reports',
-        description: 'Generate detailed reports in Excel and PDF formats for better insights.',
-        icon: ChartBarIcon
-    },
-    {
-        name: 'Enrollment Tracking',
-        description: 'Monitor student enrollments and course progress in real-time.',
-        icon: AcademicCapIcon
-    },
-    {
-        name: 'Document Management',
-        description: 'Manage course materials and student documents securely.',
-        icon: DocumentTextIcon
-    },
-    {
-        name: 'Customizable Settings',
-        description: "Flexible configuration options to match your institution's needs.",
-        icon: AdjustmentsVerticalIcon
-    }
-];
-
-const faqs = [
-    {
-        question: 'How do I get started?',
-        answer: 'Simply register for an account and follow our quick setup guide.'
-    },
-    {
-        question: 'Is there a free trial?',
-        answer: 'Yes, we offer a 14-day free trial with all features unlocked.'
-    },
-    {
-        question: 'Can I export my data?',
-        answer: 'Yes, you can export your data in various formats including Excel and PDF.'
-    }
-];
-
-const testimonials = [
-    {
-        content: "EduCourse Manager has transformed how we manage our training courses.",
-        author: "Badang S.",
-        role: "EXP Laner",
-        company: "Land of Dawn"
-    },
-    {
-        content: "The best course management system even though i never used it.",
-        author: "John Duck",
-        role: "School Janitor",
-        company: "SMA Negeri 1 Ohio"
-    },
-    {
-        content: "Sigma sigma boy sigma boy sigma boy. Whatta sigma apps.",
-        author: "Mr. Sigma",
-        role: "Rizz Coordinator",
-        company: "Online Skibidi Center"
-    }
-];
+    navigation,
+    socialLinks,
+    features,
+    testimonials,
+    faqs 
+} from './constants';
 
 defineProps({
     canLogin: {
