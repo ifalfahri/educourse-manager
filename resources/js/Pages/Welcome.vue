@@ -6,7 +6,7 @@ import {
     features,
     testimonials,
     faqs 
-} from './constants';
+} from '@/constants';
 
 defineProps({
     canLogin: {
